@@ -1,0 +1,61 @@
+{
+  "name": "python-uv-dev",
+  "image": "ghcr.io/astral-sh/uv:0.9.2-python3.13-bookworm-slim",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "installOhMyZsh": false,
+      "username": "vscode",
+      "userUid": "1000",
+      "userGid": "1000"
+    }
+  },
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "Anthropic.claude-code",
+        "visualjj.visualjj",
+        "tamasfe.even-better-toml",
+        "njpwerner.autodocstring",
+        "bierner.markdown-mermaid",
+        "DavidAnson.vscode-markdownlint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "files.exclude": {
+          "**/__pycache__": true,
+          "**/.pytest_cache": true
+        },
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+        "python.languageServer": "Pylance",
+        "python.analysis.autoImportCompletions": true,
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+          }
+        },
+        "[markdown]": {
+          "editor.codeActionsOnSave": {
+            "source.fixAll.markdownlint": "explicit"
+          }
+        }
+      }
+    }
+  },
+  "mounts": [
+    "source=uv-venv-${devcontainerId},target=${containerWorkspaceFolder}/.venv,type=volume"
+  ],
+  "remoteEnv": {
+    "NODE_TLS_REJECT_UNAUTHORIZED": "0",
+    "UV_LINK_MODE": "copy"
+  },
+  "postStartCommand": "sudo chown -R $(id -u):$(id -g) ${containerWorkspaceFolder}/.venv && cd ${containerWorkspaceFolder} && ([ -f pyproject.toml ] || uv init) && uv sync"
+}
