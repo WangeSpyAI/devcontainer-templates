@@ -5,12 +5,12 @@
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": false,
       "installOhMyZsh": false,
-      "username": "vscode",
-      "userUid": "1000",
-      "userGid": "1000"
+      "username": "automatic",
+      "userUid": "automatic",
+      "userGid": "automatic"
     }
   },
-  "remoteUser": "vscode",
+  "remoteUser": "node",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -39,5 +39,5 @@
       }
     }
   },
-  "postCreateCommand": "[ -f package.json ] || npm create vite@latest . -- --template react-ts && npm install"
+  "postCreateCommand": "[ -f package.json ] || (orig=$PWD && tmp=$(mktemp -d) && cd \"$tmp\" && CI=true npx --yes create-vite@6 app --template react-ts && cp -rn app/. \"$orig\" && rm -rf \"$tmp\") && npm install"
 }
